@@ -46,9 +46,9 @@ def full_unquote(s: str) -> str:
 
 def send_summary_message(bot: telebot.TeleBot, chat_id: str, counts: Dict[str, int]):
     base_raw_url = f"https://raw.githubusercontent.com/{GITHUB_REPOSITORY}/main"
-    message = "📊 **V2RayExtractor Summary** 📊\n\n"
+    message = "📊 V2RayExtractor Summary 📊\n\n"
     total_configs = sum(counts.values())
-    message += f"Total Healthy Configs: **{total_configs}**\n\n"
+    message += f"Total Healthy Configs: {total_configs}\n\n"
 
     links_map = {
         "mix": f"{base_raw_url}/mix/sub.html", 
@@ -60,21 +60,21 @@ def send_summary_message(bot: telebot.TeleBot, chat_id: str, counts: Dict[str, i
     }
 
     if total_configs > 0:
-        message += f"**MIX (ALL):**\n`{links_map['mix']}`\n\n"
+        message += f"MIX (ALL):\n{links_map['mix']}\n\n"
 
     for protocol, count in counts.items():
         if count > 0:
-            message += f"**{protocol.upper()}:**\n`{links_map.get(protocol, '')}`\n"
+            message += f"{protocol.upper()}:\n{links_map.get(protocol, '')}\n"
 
     iran_tz = pytz.timezone("Asia/Tehran")
     time_ir = datetime.now(iran_tz).strftime("%Y-%m-%d %H:%M")
-    message += f"\n*Last Update: {time_ir}*"
+    message += f"\nLast Update: {time_ir}"
 
     try:
-        bot.send_message(chat_id, message, parse_mode='Markdown', disable_web_page_preview=True)
+        bot.send_message(chat_id, message, parse_mode=None, disable_web_page_preview=True)
     except Exception as e:
         logging.error(f"Failed to send summary message: {e}")
-
+    
 def clean_config_for_telegram(config: str) -> str:
     return re.sub(r'(#.*?)::[A-Z]{2}$', r'\1', config)
 
@@ -161,3 +161,4 @@ def send_all_grouped_configs(bot: telebot.TeleBot, channel_id: str, grouped_conf
                 parse_mode='Markdown',
                 disable_web_page_preview=True
             )
+
