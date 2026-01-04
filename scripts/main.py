@@ -75,7 +75,8 @@ def clean_previous_configs(configs: List[str]) -> List[str]:
                 cleaned_configs.append(f"{base_uri}#{cleaned_tag}" if cleaned_tag else base_uri)
             else:
                 cleaned_configs.append(config)
-        except:
+        except Exception as e:
+            logging.warning(f"Error cleaning config: {e}")
             cleaned_configs.append(config)
     return cleaned_configs
 
@@ -105,22 +106,47 @@ def scrape_configs_from_url(url: str) -> List[str]:
                 base_uri = config.split('#', 1)[0]
                 configs.append(f"{base_uri}#{new_tag}")
         return configs
-    except: return []
+    except Exception as e:
+        logging.error(f"Scrape error for {url}: {e}")
+        return []
 
 def run_sub_checker(input_configs: List[str]) -> List[str]:
-    if not SUB_CHECKER_DIR.is_dir(): return []
+    logging.info(f"Starting Sub-Checker with {len(input_configs)} configs")
+    if not SUB_CHECKER_DIR.is_dir():
+        logging.error(f"Directory {SUB_CHECKER_DIR} not found!")
+        return []
+    
     normal_txt_path = SUB_CHECKER_DIR / "normal.txt"
     final_txt_path = SUB_CHECKER_DIR / "final.txt"
     cl_py_path = SUB_CHECKER_DIR / "cl.py"
+    
+    logging.info(f"Writing configs to {normal_txt_path}")
     normal_txt_path.write_text("\n".join(input_configs), encoding="utf-8")
+    
     try:
-        subprocess.run(["python", cl_py_path.name], cwd=SUB_CHECKER_DIR, capture_output=True, text=True, timeout=7200)
+        logging.info("Executing cl.py... Please wait.")
+        result = subprocess.run(
+            ["python", cl_py_path.name], 
+            cwd=SUB_CHECKER_DIR, 
+            capture_output=True, 
+            text=True, 
+            timeout=7200
+        )
+        if result.returncode != 0:
+            logging.error(f"cl.py failed with error: {result.stderr}")
+        
         if final_txt_path.exists():
-            return [line.strip() for line in final_txt_path.read_text(encoding="utf-8").splitlines() if line.strip()]
-    except: pass
+            checked = [line.strip() for line in final_txt_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+            logging.info(f"Sub-Checker finished. Found {len(checked)} healthy configs.")
+            return checked
+        else:
+            logging.error("final.txt not found after cl.py execution!")
+    except Exception as e:
+        logging.error(f"Error during run_sub_checker: {e}")
     return []
 
 def process_and_save_results(checked_configs: List[str]) -> Dict[str, int]:
+    logging.info("Processing and saving results to parent directory...")
     if not checked_configs: return {}
 
     loc_dir = ROOT_DIR / "loc"
@@ -150,9 +176,12 @@ def process_and_save_results(checked_configs: List[str]) -> Dict[str, int]:
 
     for proto, configs in configs_by_protocol.items():
         if configs:
-            (ROOT_DIR / f"{proto}.html").write_text("\n".join(configs), encoding="utf-8")
+            p = ROOT_DIR / f"{proto}.html"
+            p.write_text("\n".join(configs), encoding="utf-8")
+            logging.info(f"Saved {len(configs)} to {p.name}")
 
     (mix_dir / "sub.html").write_text("\n".join(checked_configs), encoding="utf-8")
+    logging.info("Saved mix/sub.html")
 
     for loc_code, configs in configs_by_location.items():
         flag = "❓"
@@ -165,38 +194,49 @@ def process_and_save_results(checked_configs: List[str]) -> Dict[str, int]:
     return {proto: len(configs) for proto, configs in configs_by_protocol.items()}
 
 def main():
+    logging.info("Step 1: Scraping Telegram channels")
     all_raw_configs = []
     with ThreadPoolExecutor(max_workers=20) as executor:
         results = executor.map(scrape_configs_from_url, TELEGRAM_URLS)
         for res in results: all_raw_configs.extend(res)
     unique_new = sorted(list(set(all_raw_configs)))
+    logging.info(f"Found {len(unique_new)} unique new configs")
 
+    logging.info("Step 2: Loading previous configs")
     previous = []
     prev_file = ROOT_DIR / "mix" / "sub.html"
     if prev_file.is_file():
         try:
             lines = prev_file.read_text(encoding="utf-8").splitlines()
             previous = clean_previous_configs([l.strip() for l in lines if '://' in l])
-        except: pass
+            logging.info(f"Loaded {len(previous)} previous configs")
+        except Exception as e:
+            logging.error(f"Error loading previous configs: {e}")
 
     combined = sorted(list(set(unique_new + previous)))
+    logging.info(f"Total configs to test: {len(combined)}")
     if not combined: return
 
     checked = run_sub_checker(combined)
     protocol_counts = process_and_save_results(checked)
 
     if SEND_TO_TELEGRAM and TELEGRAM_BOT_TOKEN:
+        logging.info("Step 3: Sending to Telegram")
         try:
             bot = telegram_sender.init_bot(TELEGRAM_BOT_TOKEN)
             if bot and protocol_counts:
                 if TELEGRAM_CHAT_ID:
+                    logging.info(f"Sending summary to main channel: {TELEGRAM_CHAT_ID}")
                     telegram_sender.send_summary_message(bot, TELEGRAM_CHAT_ID, protocol_counts)
                 
                 if TELEGRAM_CHANNEL_ID:
+                    logging.info(f"Sending grouped configs to channel: {TELEGRAM_CHANNEL_ID}")
                     grouped = telegram_sender.regroup_configs_by_source(checked)
                     telegram_sender.send_all_grouped_configs(bot, TELEGRAM_CHANNEL_ID, grouped)
-        except: pass
+        except Exception as e:
+            logging.error(f"Telegram Notification Error: {e}")
+
+    logging.info("V2Ray Extractor finished successfully.")
 
 if __name__ == "__main__":
     main()
-
