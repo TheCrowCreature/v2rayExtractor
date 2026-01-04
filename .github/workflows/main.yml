@@ -2,8 +2,8 @@ name: V2Ray Config Extractor & Checker
 
 on:
   schedule:
-    - cron: '0 */6 * * *' # هر ۶ ساعت یکبار اجرا می‌شود
-  workflow_dispatch: # امکان اجرای دستی
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -18,9 +18,8 @@ jobs:
       - name: Checkout Your Sub-Checker Tool
         uses: actions/checkout@v4
         with:
-          # تغییر به ریپازیتوری شما
-          repository: TheCrowCreature/scripts/sub-checker
-          path: sub-checker
+          repository: TheCrowCreature/sub-checker
+          path: scripts/sub-checker # اینجا مسیر رو به اسکریپت تغییر دادیم
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -32,7 +31,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install pyTelegramBotAPI pytz requests beautifulsoup4 pycountry
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          if [ -f sub-checker/requirements.txt ]; then pip install -r sub-checker/requirements.txt; fi
+          if [ -f scripts/sub-checker/requirements.txt ]; then pip install -r scripts/sub-checker/requirements.txt; fi
 
       - name: Run Main Extractor Script
         env:
@@ -40,14 +39,17 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
-          PYTHONPATH: ${{ github.workspace }} # برای پیدا کردن ماژول‌ها
+          # این خط کمک میکنه پایتون پوشه scripts رو به عنوان ماژول بشناسه
+          PYTHONPATH: ${{ github.workspace }}:${{ github.workspace }}/scripts
         run: python main.py
 
       - name: Commit and Push Results
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
           git add .
+          
           if git diff --staged --quiet; then
             echo "No changes to commit."
           else
