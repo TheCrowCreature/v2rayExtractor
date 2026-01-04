@@ -23,7 +23,7 @@ CONFIG_INVITE_LINK = "https://t.me/+mLeDtu0K_qEzZmVk"
 
 # دکمه‌های زیر پیام
 MARKUP = types.InlineKeyboardMarkup(row_width=2)
-btn1 = types.InlineKeyboardButton("Github", url=GITHUB_REPO_URL)
+btn1 = types.InlineKeyboardButton("Github", url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
 btn2 = types.InlineKeyboardButton("Author", url="https://t.me/TheCrowCreature")
 MARKUP.add(btn1, btn2)
 
@@ -161,4 +161,5 @@ def send_all_grouped_configs(bot: telebot.TeleBot, channel_id: str, grouped_conf
                 parse_mode='Markdown',
                 disable_web_page_preview=True
             )
+
 
