@@ -24,7 +24,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install pyTelegramBotAPI pytz requests beautifulsoup4 pycountry
-          # اگر فایل requirements داخل پوشه scripts است:
           if [ -f scripts/requirements.txt ]; then pip install -r scripts/requirements.txt; fi
 
       - name: Run Main Extractor Script
@@ -50,5 +49,6 @@ jobs:
             git pull --rebase origin main
             git push origin main
           fi
+
 
 
