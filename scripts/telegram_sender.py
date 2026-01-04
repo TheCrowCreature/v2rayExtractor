@@ -13,18 +13,18 @@ import telebot
 from telebot import types
 from telebot.apihelper import ApiTelegramException
 
-GITHUB_REPOSITORY = os.getenv('GITHUB_REPOSITORY', 'arshiacomplus/V2rayExtractor')
+GITHUB_REPOSITORY = os.getenv('GITHUB_REPOSITORY', 'TheCrowCreature/v2rayExtractor')
 GITHUB_REPO_URL = f"https://github.com/{GITHUB_REPOSITORY}"
 
-MAIN_CHANNEL_ID_RAW = os.getenv('TELEGRAM_CHAT_ID', 'arshia_mod_fun').lstrip('@')
+MAIN_CHANNEL_ID_RAW = os.getenv('TELEGRAM_CHAT_ID', '+mLeDtu0K_qEzZmVk').lstrip('@')
 MAIN_CHANNEL_URL = f"https://t.me/{MAIN_CHANNEL_ID_RAW}"
 
-CONFIG_CHANNEL_ID_RAW = os.getenv('TELEGRAM_CHANNEL_ID', 'v2ray_Extractor').lstrip('@')
+CONFIG_CHANNEL_ID_RAW = os.getenv('TELEGRAM_CHANNEL_ID', '+hujZl_lRBv0wZmEx').lstrip('@')
 CONFIG_CHANNEL_URL = f"https://t.me/{CONFIG_CHANNEL_ID_RAW}"
 
 MARKUP = types.InlineKeyboardMarkup(row_width=2)
-btn1 = types.InlineKeyboardButton("Github", url="https://github.com/arshiacomplus")
-btn2 = types.InlineKeyboardButton("Author", url="https://t.me/arshiacomplus")
+btn1 = types.InlineKeyboardButton("Github", url="https://github.com/TheCrowCreature")
+btn2 = types.InlineKeyboardButton("Author", url="https://t.me/TheCrowCreature")
 MARKUP.add(btn1, btn2)
 
 
@@ -154,8 +154,8 @@ def send_all_grouped_configs(bot: telebot.TeleBot, channel_id: str, grouped_conf
 
 
             safe_source = source.replace('__', '\\_\\_')
-            safe_main_channel_id = ("@" + MAIN_CHANNEL_ID_RAW).replace('__', '\\_\\_')
-            safe_config_channel_id = ("@" + CONFIG_CHANNEL_ID_RAW).replace('__', '\\_\\_')
+            safe_main_channel_id = ("https://t.me/" + MAIN_CHANNEL_ID_RAW).replace('__', '\\_\\_')
+            safe_config_channel_id = ("https://t.me/" + CONFIG_CHANNEL_ID_RAW).replace('__', '\\_\\_')
 
             caption = (
                 f"{message_text}\n\n"
@@ -173,3 +173,4 @@ def send_all_grouped_configs(bot: telebot.TeleBot, channel_id: str, grouped_conf
                 parse_mode='Markdown',
                 disable_web_page_preview=True
             )
+
