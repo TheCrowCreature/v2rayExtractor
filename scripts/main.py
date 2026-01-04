@@ -185,14 +185,18 @@ def main():
     checked = run_sub_checker(combined)
     protocol_counts = process_and_save_results(checked)
 
-    if SEND_TO_TELEGRAM and TELEGRAM_BOT_TOKEN and TELEGRAM_CHANNEL_ID:
+    if SEND_TO_TELEGRAM and TELEGRAM_BOT_TOKEN:
         try:
             bot = telegram_sender.init_bot(TELEGRAM_BOT_TOKEN)
             if bot and protocol_counts:
-                telegram_sender.send_summary_message(bot, TELEGRAM_CHANNEL_ID, protocol_counts)
-                grouped = telegram_sender.regroup_configs_by_source(checked)
-                telegram_sender.send_all_grouped_configs(bot, TELEGRAM_CHANNEL_ID, grouped)
+                if TELEGRAM_CHAT_ID:
+                    telegram_sender.send_summary_message(bot, TELEGRAM_CHAT_ID, protocol_counts)
+                
+                if TELEGRAM_CHANNEL_ID:
+                    grouped = telegram_sender.regroup_configs_by_source(checked)
+                    telegram_sender.send_all_grouped_configs(bot, TELEGRAM_CHANNEL_ID, grouped)
         except: pass
 
 if __name__ == "__main__":
     main()
+
