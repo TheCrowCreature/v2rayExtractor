@@ -33,10 +33,10 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
-          # تنظیم مسیر برای اینکه پایتون فایل‌های کنار main.py را پیدا کند
           PYTHONPATH: ${{ github.workspace }}/scripts
-        # اجرای فایل از داخل پوشه scripts
-        run: python scripts/main.py
+        run: |
+          cd scripts
+          python main.py
 
       - name: Commit and Push Results
         run: |
@@ -49,3 +49,4 @@ jobs:
             git commit -m "📊 Update V2Ray configs | Powered by TheCrowCreature"
             git push
           fi
+
