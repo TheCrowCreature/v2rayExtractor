@@ -9,8 +9,8 @@
 قبل از شروع، شما به سه مورد زیر نیاز دارید:
 
 1.  **توکن ربات تلگرام:** که می‌توانید آن را از [BotFather](https://t.me/BotFather) دریافت کنید.
-2.  **آیدی کانال اصلی:** برای ارسال پیام خلاصه نتایج (مثلاً `@arshia_mod_fun`).
-3.  **آیدی کانال کانفیگ‌ها:** برای ارسال کانفیگ‌های گروه‌بندی شده (مثلاً `@v2ray_Extractor`).
+2.  **آیدی کانال اصلی:** برای ارسال پیام خلاصه نتایج (مثلاً `@config_sublink_v2ray`).
+3.  **آیدی کانال کانفیگ‌ها:** برای ارسال کانفیگ‌های گروه‌بندی شده (مثلاً `@v2ray_best_Configs`).
 
 **نکته مهم:** ربات شما باید در هر دو کانال **ادمین** باشد و دسترسی لازم برای ارسال پیام را داشته باشد.
 
@@ -66,7 +66,7 @@
 
 ### 🔹 **mix**:
 ```bash
-https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/mix/sub.html
+https://raw.githubusercontent.com/TheCrowCreature/v2rayExtractor/refs/heads/main/mix/sub.html
 ```
 
 ---
@@ -75,42 +75,33 @@ https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/m
 
 ### 🔹 **vless**:
 ```bash
-https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/vless.html
+https://raw.githubusercontent.com/TheCrowCreature/v2rayExtractor/refs/heads/main/vless.html
 ```
 
 ---
 
 ### 🔹 **vmess**:
 ```bash
-https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/vmess.html
+https://raw.githubusercontent.com/TheCrowCreature/v2rayExtractor/refs/heads/main/vmess.html
 ```
 
 ---
 
 ### 🔹 **trojan**:
 ```bash
-https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/trojan.html
+https://raw.githubusercontent.com/TheCrowCreature/v2rayExtractor/refs/heads/main/trojan.html
 ```
 
 ---
 
 ### 🔹 **ss**:
 ```bash
-https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/ss.html
+https://raw.githubusercontent.com/TheCrowCreature/v2rayExtractor/refs/heads/main/ss.html
 ```
 
 ---
 
 ### 🔹 **hy2**:
 ```bash
-https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/hy2.html
+https://raw.githubusercontent.com/TheCrowCreature/v2rayExtractor/refs/heads/main/hy2.html
 ```
-
-
-
-## 🌍 **در این پیج می‌تونی کانفیگ‌ها رو بر اساس منطقه مشاهده کنی:**
-
-
-https://arshiacomplus.github.io/V2rayExtractor-page/
-
----
