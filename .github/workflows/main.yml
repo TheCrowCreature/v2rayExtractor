@@ -12,14 +12,8 @@ jobs:
   build-and-commit:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Your Main Repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
-
-      - name: Checkout Your Sub-Checker Tool
-        uses: actions/checkout@v4
-        with:
-          repository: TheCrowCreature/sub-checker
-          path: scripts/sub-checker # اینجا مسیر رو به اسکریپت تغییر دادیم
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -30,8 +24,8 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install pyTelegramBotAPI pytz requests beautifulsoup4 pycountry
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          if [ -f scripts/sub-checker/requirements.txt ]; then pip install -r scripts/sub-checker/requirements.txt; fi
+          # اگر فایل requirements داخل پوشه scripts است:
+          if [ -f scripts/requirements.txt ]; then pip install -r scripts/requirements.txt; fi
 
       - name: Run Main Extractor Script
         env:
@@ -39,17 +33,16 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
-          # این خط کمک میکنه پایتون پوشه scripts رو به عنوان ماژول بشناسه
-          PYTHONPATH: ${{ github.workspace }}:${{ github.workspace }}/scripts
-        run: python main.py
+          # تنظیم مسیر برای اینکه پایتون فایل‌های کنار main.py را پیدا کند
+          PYTHONPATH: ${{ github.workspace }}/scripts
+        # اجرای فایل از داخل پوشه scripts
+        run: python scripts/main.py
 
       - name: Commit and Push Results
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          
           git add .
-          
           if git diff --staged --quiet; then
             echo "No changes to commit."
           else
