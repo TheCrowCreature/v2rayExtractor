@@ -52,7 +52,7 @@ SEND_TO_TELEGRAM = os.getenv('SEND_TO_TELEGRAM', 'false').lower() == 'true'
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 TELEGRAM_CHANNEL_ID = os.getenv('TELEGRAM_CHANNEL_ID')
-SUB_CHECKER_DIR = Path("sub-checker")
+SUB_CHECKER_DIR = Path(__file__).parent / "sub-checker"
 
 def full_unquote(s: str) -> str:
 
@@ -335,4 +335,5 @@ def main():
 
     logging.info("--- V2Ray Extractor finished successfully! ---")
 if __name__ == "__main__":
+
     main()
